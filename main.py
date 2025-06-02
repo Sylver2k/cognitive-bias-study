@@ -1,10 +1,13 @@
 import pandas as pd
 import aisuite as ai
+import random
 from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-LIMIT = 10
+LIMIT = 1
+
+results = []
 
 def build_dic_from_csv(csv_file: str):
     df = pd.read_csv(csv_file)
@@ -12,11 +15,24 @@ def build_dic_from_csv(csv_file: str):
     df_limited = df.head(LIMIT)
 
     questions = [x for x in df_limited['Question']]
-    answers = [x for x in zip(df_limited['Best Answer'], df_limited['Best Incorrect Answer'])]
 
-    dataset = {k:v for k, v in zip(questions, answers)}
+    shuffled_answers = []
+    answer_lookup_table = []
 
-    return dataset
+    for correct, incorrect in zip(df_limited['Best Answer'], df_limited['Best Incorrect Answer']):
+        answer_pair = [correct, incorrect]
+        random.shuffle(answer_pair)
+        shuffled_answers.append(tuple(answer_pair))
+
+        correct_index = answer_pair.index(correct)
+        correct_option = "AB"[correct_index]
+
+        answer_lookup_table.append(correct_option)
+
+    lookup_table = {idx: option for idx, option in enumerate(answer_lookup_table)}
+    dataset = {k:v for k, v in zip(questions, shuffled_answers)}
+
+    return dataset, lookup_table
 
 def ask_ai_model(provider, model_id, prompt):
     client = ai.Client()
