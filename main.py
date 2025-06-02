@@ -36,6 +36,15 @@ def ask_ai_model(provider, model_id, prompt):
 
     return response.choices[0].message.content
 
+def store_answer(question, answer, num, lookup_table):
+    selected_answer_option = answer.split('The best answer is:')[1].strip()[1]
+    correct_answer_option = lookup_table[num]
+
+    results.append({'Question': question, 'Answer': answer, 'Selected Answer': selected_answer_option, 'Correct Answer': correct_answer_option})
+
+def export_results(study_results, filename):
+    df = pd.DataFrame(study_results)
+    df.to_csv(f"results/{filename}", index=False, encoding="utf-8-sig")
 
 def get_prompt(bias_type: str | None, question, answers):
     anchor_bias_injection = "An expert on this topic has selected answer C"
