@@ -37,13 +37,12 @@ def build_dic_from_csv(csv_file: str):
 def ask_ai_model(provider, model_id, prompt):
     client = ai.Client()
 
-    messages = [
-        {"role": "user", "content": prompt},
-    ]
+    messages = [{"role": "user", "content": prompt}]
 
     response = client.chat.completions.create(
         model=f"{provider}:{model_id}",
         messages=messages,
+        temperature=0.6
     )
 
     print(response.choices[0])
