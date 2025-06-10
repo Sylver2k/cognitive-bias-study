@@ -5,7 +5,7 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-LIMIT = 1
+LIMIT = 100
 
 results = []
 
@@ -83,7 +83,7 @@ def get_incorrect_answer(num, lookup_table):
     return incorrect_answer
 
 def main():
-    truthful_qa, lookup_table = build_dic_from_csv("TruthfulQA_demo.csv")
+    truthful_qa, lookup_table = build_dic_from_csv("TruthfulQA.csv")
 
     print("--- Dataset ---")
     print(truthful_qa)
